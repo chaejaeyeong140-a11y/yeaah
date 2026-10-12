@@ -10,6 +10,7 @@ const artsOfWeek = wk => ARTICLES.filter(a=>a.week===wk);
 const weekOf = id => WEEKS.find(w=>w.id===id);
 const bySector = s => ARTICLES.filter(a=>a.sector===s);
 const leadOf = t => (t.split(/(?<=\.)\s/).slice(0,2).join(' '));
+/* 레벨 0(미확인)은 칸이 하나도 채워지지 않은 상태로 표시됨 */
 const meter = (lv,small)=>`<span class="meter${small?' s':''}">${[1,2,3,4,5].map(i=>`<i class="${i<=lv?'on':''}"></i>`).join('')}</span>`;
 
 /* 오늘 날짜 */
@@ -17,13 +18,13 @@ const meter = (lv,small)=>`<span class="meter${small?' s':''}">${[1,2,3,4,5].map
   .toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})
   .replace(/\./g,'.') + ' 발행';
 
-/* 티커 */
+/* 티커 — 현재 데이터셋 기준 (기사 교체 시 이곳도 함께 수정) */
 const TICKS = [
- '<b>국감장 "폭행·군대 출동"</b> — 해외 의회 영상·AI 편집본이었습니다',
- '<b>"장관이 122억 결제"</b> — 결제 주체는 민간 의심 업체였습니다',
- '<b>"슈퍼컴퓨터 폭발·폭설 예보"</b> — 기상청, 허위정보 1건 형사고발',
- '<b>연예인 "다이어트 약 반값"</b> — 딥페이크 사칭 사기 광고입니다',
- '<b>손흥민 "왕따·계약 해지"</b> — 편집 숏폼이 만든 허구입니다',
+ '<b>"예금계좌 해킹" 확산</b> — 실제 공격은 부가 시스템 대상이었습니다',
+ '<b>"암살자(들)" 김정일 사과설</b> — 근거 확인 불가로 걸렸습니다',
+ '<b>"민족과 운명" 베끼기설</b> — 근거로 소환된 논문의 결론이 달랐습니다',
+ '<b>금융 해킹 개인정보 유출</b> — 7개사 확인, 경찰 28명 전담팀 출동',
+ '<b>노벨상·누리호·아시안게임</b> — 확인된 허위정보 없음, 미확인으로 기록',
 ];
  $('#ticker').innerHTML = [0,1].map(()=>TICKS.map(t=>`<span class="tk">${t}</span><span class="tk sep">/</span>`).join('')).join('');
 
@@ -36,8 +37,9 @@ const TICKS = [
    뷰: 홈
    ============================================================ */
 function renderHome(){
-  const SOON = ['10월 2주차','10월 3주차','10월 4주차']; /* 발행하면 WEEKS에 추가하고 여기서 하나씩 지우기 */
+  const SOON = ['10월 3주차','10월 4주차']; /* 발행하면 WEEKS에 추가하고 여기서 하나씩 지우기 */
   const latest = WEEKS[0], hero = artsOfWeek(latest.id)[0];
+  const latestCnt = artsOfWeek(latest.id).length;
   const tiles = WEEKS.map((w,i)=>{
     const a = artsOfWeek(w.id)[0];
     return `<a class="week-tile ${i===0?'big':''} reveal" href="#/week/${w.id}" style="transition-delay:${i*70}ms">
@@ -70,7 +72,7 @@ function renderHome(){
         <p class="lead">${leadOf(hero.summary)}</p>
         <div class="check-line">${meter(hero.level,true)} 검증 결과 <b>${LEVELS[hero.level]}</b> — ${hero.note.split('.')[0]}.</div>
         <div class="cta">
-          <a class="btn" href="#/week/${latest.id}">이번 주 검증 5건 전체 보기
+          <a class="btn" href="#/week/${latest.id}">이번 주 검증 ${latestCnt}건 전체 보기
             <svg class="arrow" width="16" height="12" viewBox="0 0 16 12"><path d="M0 6h14M9 1l5 5-5 5"/></svg></a>
           <a class="link-more" href="#" data-article="${hero.id}">기사 상세 검증 노트 열기 →</a>
         </div>
@@ -135,7 +137,7 @@ function renderWeek(id){
         <h2>${w.label}</h2>
         <span class="range">${w.range} · 발행: 손봄 편집실</span>
       </div>
-      <span class="badge">검증 ${arts.length}건 · 5단계 팩트 척도</span>
+      <span class="badge">검증 ${arts.length}건 · 6단계 팩트 척도</span>
     </header>
     <div class="tabs" id="tabs">${sectorBtns}</div>
     <div class="news-grid" id="news-grid">
@@ -305,7 +307,7 @@ function openArticle(id){
         <div class="mc-note"><em>확인</em><p>${a.note}</p></div>
         <div class="mc-foot">
           <div class="mc-meter">${meter(a.level)}<span class="ll">${LEVELS[a.level]}</span></div>
-          <div class="stamp">${LEVELS[a.level]}</div>
+          <div class="stamp ${a.level===0?'gray':''}">${LEVELS[a.level]}</div>
         </div>
         <div class="mc-source">출처 — ${(a.sources && a.sources.length)
           ? a.sources.map(x=>`<a href="${x.u}" target="_blank" rel="noopener" style="color:var(--red);text-decoration:underline;text-underline-offset:2px">${x.t}</a>`).join(' &nbsp;·&nbsp; ')
