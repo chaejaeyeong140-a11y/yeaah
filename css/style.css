@@ -58,7 +58,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 @keyframes tick{to{transform:translateX(-50%)}}
 .tk{font-size:13px;padding:9px 0;color:var(--ink2)}
 .tk b{font-weight:600;color:var(--ink)}
-.tk .sep{margin:0 22px;color:var(--red)}
+.tk.sep{margin:0 22px;color:var(--red)}
 
 /* ---------- 내비게이션 ---------- */
 .nav{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:2px solid var(--ink)}
@@ -334,6 +334,15 @@ footer .base .wrap{display:flex;justify-content:space-between;padding:14px 28px;
   border-left:3px solid var(--red);opacity:0;transition:.3s;pointer-events:none;
 }
 .toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ============================================================
+   등급 0(미확인) — 잉크 톤 (빨간 판정과 구분)
+   ※ .nc-foot .lv / .check-line b 보다 나중에 와야 우선 적용됨
+   ============================================================ */
+.lv.zero{color:var(--ink2)}
+.lv.zero .meter i{border-color:var(--ink2)}
+.check-line b.zero{color:var(--ink2)}
+.mc-meter .ll.zero{color:var(--ink2)}
 
 /* ============================================================
    반응형
