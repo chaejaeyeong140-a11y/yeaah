@@ -70,7 +70,7 @@ function renderHome(){
         <div class="k"><span class="tag red">${SECTORS[hero.sector].name}</span><span class="tag">${latest.range}</span></div>
         <h2>${hero.headline}</h2>
         <p class="lead">${leadOf(hero.summary)}</p>
-        <div class="check-line">${meter(hero.level,true)} 검증 결과 <b>${LEVELS[hero.level]}</b> — ${hero.note.split('.')[0]}.</div>
+        <div class="check-line">${meter(hero.level,true)} 검증 결과 <b class="${hero.level===0?'zero':''}">${LEVELS[hero.level]}</b> — ${hero.note.split('.')[0]}.</div>
         <div class="cta">
           <a class="btn" href="#/week/${latest.id}">이번 주 검증 ${latestCnt}건 전체 보기
             <svg class="arrow" width="16" height="12" viewBox="0 0 16 12"><path d="M0 6h14M9 1l5 5-5 5"/></svg></a>
@@ -168,7 +168,7 @@ function cardHTML(a){
       <h3>${a.headline}</h3>
       <p>${a.summary}</p>
       <div class="nc-foot">
-        <span class="lv">${meter(a.level,true)} ${LEVELS[a.level]}</span>
+        <span class="lv ${a.level===0?'zero':''}">${meter(a.level,true)} ${LEVELS[a.level]}</span>
         <span class="go">상세 검증 →</span>
       </div>
     </div>
@@ -306,7 +306,7 @@ function openArticle(id){
         <div class="mc-claim"><em>주장</em><p>${a.claim}</p></div>
         <div class="mc-note"><em>확인</em><p>${a.note}</p></div>
         <div class="mc-foot">
-          <div class="mc-meter">${meter(a.level)}<span class="ll">${LEVELS[a.level]}</span></div>
+          <div class="mc-meter">${meter(a.level)}<span class="ll ${a.level===0?'zero':''}">${LEVELS[a.level]}</span></div>
           <div class="stamp ${a.level===0?'gray':''}">${LEVELS[a.level]}</div>
         </div>
         <div class="mc-source">출처 — ${(a.sources && a.sources.length)
