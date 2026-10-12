@@ -19,11 +19,11 @@ const meter = (lv,small)=>`<span class="meter${small?' s':''}">${[1,2,3,4,5].map
 
 /* 티커 */
 const TICKS = [
- '<b>무인 매장 "범죄 2.3배"</b> — 분모는 매장 수 증가였습니다',
- '<b>누리호 "세계 3위"</b> — 비교 지표에 따라 4위에서 10위',
- '<b>혈중 미세플라스틱 87%</b> — 검출은 오염 확정이 아닙니다',
- '<b>"지지율 급락" 주장</b> — 3사 평균 기준 오차범위 내',
- '<b>"돌싱" 검색량 3배</b> — 검색량은 관심의 지표일 뿐입니다',
+ '<b>국감장 "폭행·군대 출동"</b> — 해외 의회 영상·AI 편집본이었습니다',
+ '<b>"장관이 122억 결제"</b> — 결제 주체는 민간 의심 업체였습니다',
+ '<b>"슈퍼컴퓨터 폭발·폭설 예보"</b> — 기상청, 허위정보 1건 형사고발',
+ '<b>연예인 "다이어트 약 반값"</b> — 딥페이크 사칭 사기 광고입니다',
+ '<b>손흥민 "왕따·계약 해지"</b> — 편집 숏폼이 만든 허구입니다',
 ];
  $('#ticker').innerHTML = [0,1].map(()=>TICKS.map(t=>`<span class="tk">${t}</span><span class="tk sep">/</span>`).join('')).join('');
 
@@ -36,6 +36,7 @@ const TICKS = [
    뷰: 홈
    ============================================================ */
 function renderHome(){
+  const SOON = ['10월 2주차','10월 3주차','10월 4주차']; /* 발행하면 WEEKS에 추가하고 여기서 하나씩 지우기 */
   const latest = WEEKS[0], hero = artsOfWeek(latest.id)[0];
   const tiles = WEEKS.map((w,i)=>{
     const a = artsOfWeek(w.id)[0];
@@ -48,10 +49,10 @@ function renderHome(){
         <span class="cnt">검증 ${artsOfWeek(w.id).length}건 열람 →</span>
       </div>
     </a>`;
-  }).join('') + `
-    <div class="week-tile soon reveal" style="transition-delay:280ms">
-      <div class="soon-in"><b>11월 1주차</b>COMING SOON · 발행 예정</div>
-    </div>`;
+  }).join('') + SOON.map((s,i)=>`
+    <div class="week-tile soon reveal" style="transition-delay:${(WEEKS.length+i)*70}ms">
+      <div class="soon-in"><b>${s}</b>COMING SOON · 발행 예정</div>
+    </div>`).join('');
 
   const e = ESSAYS[0];
   app.innerHTML = `
@@ -80,7 +81,7 @@ function renderHome(){
     <div id="week-archive">
       <div class="sec-head">
         <h2>주간 검증 아카이브</h2>
-        <p class="desc">정사각형 한 칸이 한 주입니다. 타일을 열면 정치·사회·과학·연애·스포츠 다섯 섹터의 카드뉴스가 펼쳐집니다.</p>
+        <p class="desc">정사각형 한 칸이 한 주입니다. 타일을 열면 정치·사회·과학·연예·스포츠 다섯 섹터의 카드뉴스가 펼쳐집니다.</p>
       </div>
       <div class="week-grid">${tiles}</div>
     </div>
@@ -179,7 +180,7 @@ const SEC_DESC = {
   politics:'정치 헤드라인에서 가장 자주 지워지는 것은 오차범위와 비교 기준입니다.',
   society :'사회 통계는 분모를 숨길 때 가장 무서워집니다. 배수와 비율의 뒷면을 봅니다.',
   science :'연구 결과와 미래 전망은 다른 문장입니다. 논문 원문의 문구를 확인합니다.',
-  love    :'설문·트렌드 기사는 표본과 "공감/실천"의 간격이 생명입니다.',
+  love    :'딥페이크·사칭 광고는 유명인의 얼굴과 목소리를 빌려 팝니다. 인증 마크와 공식 발표가 첫 번째 안전장치입니다.',
   sports  :'기록은 사실이지만, 해석은 시즌이 끝나기 전엔 성립하지 않습니다.',
 };
 function renderSection(id){
@@ -306,7 +307,9 @@ function openArticle(id){
           <div class="mc-meter">${meter(a.level)}<span class="ll">${LEVELS[a.level]}</span></div>
           <div class="stamp">${LEVELS[a.level]}</div>
         </div>
-        <div class="mc-source">출처 — ${a.source}</div>
+        <div class="mc-source">출처 — ${(a.sources && a.sources.length)
+          ? a.sources.map(x=>`<a href="${x.u}" target="_blank" rel="noopener" style="color:var(--red);text-decoration:underline;text-underline-offset:2px">${x.t}</a>`).join(' &nbsp;·&nbsp; ')
+          : (a.source || '자체 검증')}</div>
       </div>
       <div class="m-actions">
         <button class="btn" id="copy-link">기사 링크 복사
