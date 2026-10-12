@@ -317,6 +317,7 @@ footer .base .wrap{display:flex;justify-content:space-between;padding:14px 28px;
   border:3px double var(--red);padding:8px 18px 6px;letter-spacing:.14em;
   transform:rotate(-6deg);animation:stampIn .5s cubic-bezier(.25,1.2,.4,1) .55s both;
 }
+.stamp.gray{color:var(--ink2);border-color:var(--ink2)}
 @keyframes stampIn{
   0%{opacity:0;transform:scale(2.1) rotate(-22deg)}
   60%{opacity:1;transform:scale(.92) rotate(-4deg)}
